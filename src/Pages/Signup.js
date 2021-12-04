@@ -19,10 +19,9 @@ export const Signup = () => {
         alignItems="center"
         borderRadius="md"
         m="auto"
-        w="max-content"
+        w="350px"
         shadow="base"
         p="20px 20px"
-        maxW="500px"
       >
         <Heading>Sign Up</Heading>
         {error !== "" && (
@@ -73,6 +72,7 @@ export const Signup = () => {
               display="flex"
               flexDir="column"
               onSubmit={handleSubmit}
+              w="100%"
             >
               <FormControl isInvalid={errors.email && touched.email}>
                 <Input

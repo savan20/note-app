@@ -9,7 +9,7 @@ export const Layout = ({ children }) => {
           <Heading>Notes</Heading>
         </Flex>
       </Flex>
-      <Flex p="0 20px" minH="calc(100vh - 70px)">
+      <Flex p="20px 20px" minH="calc(100vh - 70px)" overflow="auto">
         {children}
       </Flex>
     </Flex>

@@ -9,9 +9,9 @@ import React, { useState } from "react"
 import { Layout } from "../components/Layout"
 import { Link } from "react-router-dom"
 
-export const Login = () => {
+export const ResetPassword = () => {
   const [error, setError] = useState("")
-
+  const [msg, setMsg] = useState("")
   return (
     <Layout>
       <Flex
@@ -23,14 +23,19 @@ export const Login = () => {
         shadow="base"
         p="20px 20px"
       >
-        <Heading>Log in</Heading>
+        <Heading>Reset Password</Heading>
         {error !== "" && (
           <Alert status="error" mt="20px" rounded="md">
             {error}
           </Alert>
         )}
+        {msg !== "" && (
+          <Alert status="info" mt="20px" rounded="md">
+            {msg}
+          </Alert>
+        )}
         <Formik
-          initialValues={{ email: "", password: "" }}
+          initialValues={{ email: "" }}
           onSubmit={(values, { setSubmitting }) => {
             setTimeout(() => {
               alert(JSON.stringify(values, null, 2))
@@ -46,8 +51,6 @@ export const Login = () => {
               !/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email)
             ) {
               errors.email = "Invalid email"
-            } else if (!password) {
-              errors.password = "Required"
             }
 
             return errors
@@ -81,34 +84,20 @@ export const Login = () => {
                   <FormErrorMessage>{errors.email}</FormErrorMessage>
                 )}
               </FormControl>
-              <FormControl isInvalid={errors.password && touched.password}>
-                <Input
-                  placeholder="Password"
-                  mt="20px"
-                  type="password"
-                  name="password"
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  value={values.password}
-                />
-                {errors.password && touched.password && (
-                  <FormErrorMessage>{errors.password}</FormErrorMessage>
-                )}
-              </FormControl>
               <Button
                 mt="20px"
                 variant="outline"
                 type="submit"
                 isLoading={isSubmitting}
               >
-                Log In
+                Reset Password
               </Button>
             </chakra.form>
           )}
         </Formik>
         <Text mt="20px">
           <LinkWraper as="span">
-            <Link to="/reset-password">Forgot Password?</Link>
+            <Link to="/login">Log In</Link>
           </LinkWraper>
         </Text>
         <Text mt="20px">
