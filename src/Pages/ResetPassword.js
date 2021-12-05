@@ -8,8 +8,10 @@ import { Formik } from "formik"
 import React, { useState } from "react"
 import { Layout } from "../components/Layout"
 import { Link } from "react-router-dom"
+import { useAuth } from "../contexts/AuthContext"
 
 export const ResetPassword = () => {
+  const { resetPassword } = useAuth()
   const [error, setError] = useState("")
   const [msg, setMsg] = useState("")
   return (
@@ -36,11 +38,18 @@ export const ResetPassword = () => {
         )}
         <Formik
           initialValues={{ email: "" }}
-          onSubmit={(values, { setSubmitting }) => {
-            setTimeout(() => {
-              alert(JSON.stringify(values, null, 2))
-              setSubmitting(false)
-            }, 400)
+          onSubmit={async (values, { setSubmitting }) => {
+            try {
+              setError("")
+              setMsg("")
+              await resetPassword(values.email).then(() => {
+                setMsg("Check your inbox for further instructions")
+              })
+            } catch {
+              setError("No account found with that email, please sign up first")
+            }
+
+            setSubmitting(false)
           }}
           validate={({ email, password }) => {
             const errors = {}

@@ -8,9 +8,11 @@ import { Formik } from "formik"
 import React, { useState } from "react"
 import { Layout } from "../components/Layout"
 import { Link } from "react-router-dom"
+import { useAuth } from "../contexts/AuthContext"
 
 export const Login = () => {
   const [error, setError] = useState("")
+  const { login } = useAuth()
 
   return (
     <Layout>
@@ -31,11 +33,22 @@ export const Login = () => {
         )}
         <Formik
           initialValues={{ email: "", password: "" }}
-          onSubmit={(values, { setSubmitting }) => {
-            setTimeout(() => {
-              alert(JSON.stringify(values, null, 2))
-              setSubmitting(false)
-            }, 400)
+          onSubmit={async (values, { setSubmitting }) => {
+            try {
+              setError("")
+              await login(values.email, values.password).catch((error) => {
+                if (error.code === "auth/user-not-found") {
+                  setError("No account found with your credentials")
+                } else {
+                  setError(error.message)
+                  console.log(error)
+                }
+              })
+            } catch {
+              setError("Failed to create an account")
+            }
+
+            setSubmitting(false)
           }}
           validate={({ email, password }) => {
             const errors = {}

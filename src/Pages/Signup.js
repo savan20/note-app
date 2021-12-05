@@ -5,12 +5,14 @@ import { Input } from "@chakra-ui/input"
 import { Flex, Heading, Link as LinkWraper, Text } from "@chakra-ui/layout"
 import { chakra } from "@chakra-ui/system"
 import { Formik } from "formik"
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Layout } from "../components/Layout"
 import { Link } from "react-router-dom"
+import { useAuth } from "../contexts/AuthContext"
 
 export const Signup = () => {
   const [error, setError] = useState("")
+  const { signup } = useAuth()
 
   return (
     <Layout>
@@ -31,11 +33,22 @@ export const Signup = () => {
         )}
         <Formik
           initialValues={{ email: "", password: "", confirmPassword: "" }}
-          onSubmit={(values, { setSubmitting }) => {
-            setTimeout(() => {
-              alert(JSON.stringify(values, null, 2))
-              setSubmitting(false)
-            }, 400)
+          onSubmit={async (values, { setSubmitting }) => {
+            try {
+              setError("")
+              await signup(values.email, values.password).catch((error) => {
+                if (error.code === "auth/email-already-in-use") {
+                  setError("Email already in use")
+                } else {
+                  setError(error.message)
+                  console.log(error)
+                }
+              })
+            } catch {
+              setError("Failed to create an account")
+            }
+
+            setSubmitting(false)
           }}
           validate={({ email, password, confirmPassword }) => {
             const errors = {}
